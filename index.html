@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="beshbarmak — personal links and ping benchmark">
+  <title>beshbarmak — Bio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090909;
+      --surface: rgba(36, 36, 36, .78);
+      --surface-hover: rgba(57, 57, 57, .88);
+      --text: #f2f2f2;
+      --muted: #b5b5b5;
+      --border: rgba(255, 255, 255, .10);
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    body {
+      min-height: 100vh; overflow-x: hidden; position: relative;
+      background: var(--bg); color: var(--text);
+      font-family: "Google Sans", Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; -webkit-tap-highlight-color: transparent; }
+    ::selection { background: #d6d6d6; color: #111; }
+
+    .wallpaper {
+      position: fixed; inset: -14px; z-index: 0; pointer-events: none;
+      overflow: hidden; background: #101010;
+    }
+    .wallpaper::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: url("wallpaper.jpg");
+      background-position: center; background-size: cover; background-repeat: no-repeat;
+      filter: blur(5px) brightness(.48) grayscale(1);
+      transform: scale(1.035);
+    }
+    .wallpaper::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(8,8,8,.48), rgba(8,8,8,.24) 42%, rgba(8,8,8,.64));
+    }
+    .page {
+      position: relative; z-index: 1; width: min(100% - 32px, 470px);
+      min-height: 100vh; margin: 0 auto; padding: 38px 0 44px;
+    }
+    .profile {
+      text-align: center; padding: 20px 0 30px;
+      animation: appear .65s var(--ease) both;
+    }
+    .avatar-wrap { width: 132px; height: 132px; margin: 0 auto 23px; }
+    .avatar {
+      display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
+      border-radius: 43%; border: 1px solid rgba(255,255,255,.30);
+      background: #252525;
+      box-shadow: 0 0 0 6px rgba(255,255,255,.035), 0 18px 50px rgba(0,0,0,.32);
+    }
+    .avatar-fallback {
+      display: none; width: 100%; height: 100%; align-items: center; justify-content: center;
+      border-radius: 43%; background: #292929; color: #eee; font-size: 48px; font-weight: 700;
+    }
+    .name { font-size: clamp(31px, 7vw, 39px); line-height: 1.15; font-weight: 750; letter-spacing: -1.3px; overflow-wrap: anywhere; }
+    .username { margin-top: 9px; color: var(--muted); font-size: 15px; }
+    .bio { margin-top: 18px; color: #dedede; font-size: 16px; line-height: 1.4; }
+    .arrows { display: block; margin-top: 5px; color: #e6e6e6; font-size: 17px; line-height: 1.2; letter-spacing: 2px; }
+
+    .links { display: flex; flex-direction: column; gap: 13px; }
+    .link-card {
+      position: relative; display: flex; align-items: center; gap: 15px;
+      min-height: 108px; padding: 17px 18px; overflow: hidden; isolation: isolate;
+      color: var(--text); text-decoration: none; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 34px;
+      backdrop-filter: blur(22px) saturate(80%); -webkit-backdrop-filter: blur(22px) saturate(80%);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.025);
+      transition: transform .28s var(--ease), background .28s ease, border-color .28s ease, box-shadow .28s ease;
+      animation: appear .65s var(--ease) both;
+    }
+    .link-card:nth-child(1) { animation-delay: .07s; }
+    .link-card:nth-child(2) { animation-delay: .14s; }
+    .link-card:nth-child(3) { animation-delay: .21s; }
+    .link-card:hover {
+      background: var(--surface-hover); border-color: rgba(255,255,255,.20);
+      box-shadow: 0 12px 32px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+      transform: translateY(-2px);
+    }
+    .link-card:active { transform: scale(.975); }
+    .link-card:focus-visible { outline: 2px solid #eee; outline-offset: 4px; }
+    .link-icon {
+      display: grid; place-items: center; flex-shrink: 0; width: 57px; height: 57px;
+      border-radius: 23px; color: #ededed; background: rgba(235,235,235,.09);
+      transition: background .25s ease, border-radius .25s var(--ease);
+    }
+    .link-card:hover .link-icon { background: rgba(255,255,255,.14); border-radius: 20px; }
+    .link-icon svg { display: block; width: 27px; height: 27px; }
+    .link-info { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
+    .link-title { font-size: 17px; line-height: 1.3; font-weight: 650; letter-spacing: -.25px; }
+    .link-subtitle { color: var(--muted); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+    .link-arrow {
+      display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px;
+      border-radius: 50%; color: #ededed; background: rgba(255,255,255,.07);
+      transition: transform .28s var(--ease), background .28s ease;
+    }
+    .link-arrow svg { display: block; width: 22px; height: 22px; }
+    .link-card:hover .link-arrow { background: rgba(255,255,255,.14); transform: translateX(3px); }
+
+    /* Real HTTP latency benchmark — measures this GitHub Pages site, not a friend's device */
+    .ping-card {
+      margin-top: 14px; padding: 22px; color: #f2f2f2;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 34px; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.025);
+      animation: appear .65s var(--ease) .28s both;
+    }
+    .ping-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .ping-label { color: #aaa; font: 11px monospace; letter-spacing: 1.4px; text-transform: uppercase; }
+    .ping-title { margin-top: 5px; font-size: 19px; font-weight: 700; }
+    .ping-value { margin-top: 18px; display: flex; align-items: baseline; gap: 7px; }
+    .ping-number { font-size: 36px; line-height: 1.2; font-weight: 750; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; }
+    .ping-unit { color: #aaa; font-size: 14px; }
+    .ping-bars { height: 64px; display: flex; align-items: end; gap: 5px; margin: 17px 0; }
+    .ping-bar { flex: 1; min-width: 0; border-radius: 99px; background: #686868; transition: height .25s ease, background .25s ease; }
+    .ping-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.10); }
+    .ping-caption { color: #aaa; font-size: 12px; }
+    .ping-average { margin-top: 4px; font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; }
+    .ping-button {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 12px 17px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+      background: rgba(255,255,255,.10); color: #f2f2f2; font: inherit; font-size: 13px;
+      font-weight: 650; cursor: pointer; transition: background .2s, transform .2s;
+    }
+    .ping-button:hover { background: rgba(255,255,255,.18); }
+    .ping-button:active { transform: scale(.95); }
+    .ping-button:disabled { opacity: .65; cursor: wait; }
+    .ping-status { margin-top: 13px; color: #aaa; font: 11px monospace; line-height: 1.6; }
+    .ping-note { margin-top: 7px; color: #999; font-size: 11px; line-height: 1.5; }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 420px) {
+      .page { width: calc(100% - 30px); padding-top: 23px; }
+      .profile { padding-top: 17px; padding-bottom: 27px; }
+      .avatar-wrap { width: 120px; height: 120px; margin-bottom: 21px; }
+      .link-card { min-height: 96px; padding: 14px; gap: 12px; border-radius: 31px; }
+      .link-icon { width: 51px; height: 51px; border-radius: 21px; }
+      .link-title { font-size: 16px; }
+      .link-subtitle { font-size: 12px; }
+      .link-arrow { width: 39px; height: 39px; }
+      .ping-card { padding: 19px; border-radius: 31px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wallpaper" aria-hidden="true"></div>
+
+  <main class="page">
+    <section class="profile" aria-label="Профиль">
+      <div class="avatar-wrap">
+        <img class="avatar" src="avatar.jpg" alt="Аватар beshbarmak"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="avatar-fallback" aria-hidden="true">B</div>
+      </div>
+      <h1 class="name">beshbarmak</h1>
+      <p class="username">@restrot</p>
+      <p class="bio">links below</p>
+      <span class="arrows" aria-hidden="true">↓↓↓↓↓</span>
+    </section>
+
+    <nav class="links" aria-label="Мои ссылки">
+      <a class="link-card" href="https://t.me/ya_top1234" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M21.8 3.2a1.4 1.4 0 0 0-1.5-.2L2.7 9.9c-1.2.5-1.1 1.5.2 1.9l4.5 1.4 1.7 5.3c.3.8.5 1 .9 1 .4 0 .6-.2.9-.5l2.6-2.5 4.7 3.5c.8.5 1.5.2 1.7-.8l3-14.4c.1-.7-.1-1.3-.5-1.6ZM9.1 12.8l9.2-5.8c.4-.3.7-.1.4.2l-7.6 7-.3 3.2-1.7-4.6Z"/>
+          </svg>
+        </span>
+        <span class="link-info"><span class="link-title">Telegram</span><span class="link-subtitle">@ya_top1234</span></span>
+        <span class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <a class="link-card" href="https://github.com/restrot" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .9a11.1 11.1 0 0 0-3.5 21.6c.6.1.8-.3.8-.6v-2.1c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.3-1.6-1.3-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.4.1-3 0 0 .9-.3 3.1 1.1a10.8 10.8 0 0 1 5.7 0C17.2 4.9 18 5.2 18 5.2c.6 1.6.2 2.7.1 3 .7.8 1.1 1.8 1.1 3 0 4.3-2.6 5.2-5.1 5.5.4.3.8 1 .8 2v3.2c0 .3.2.7.8.6A11.1 11.1 0 0 0 12 .9Z"/>
+          </svg>
+        </span>
+        <span class="link-info"><span class="link-title">GitHub</span><span class="link-subtitle">@restrot</span></span>
+        <span class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <a class="link-card" href="https://steamcommunity.com/id/beshbarmak123456789101112/" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.2 2a10 10 0 0 0-9.8 8l5.4 2.2a3.4 3.4 0 0 1 1.9-.6l2.4-3.5v-.2a4.1 4.1 0 1 1 4.1 4.1h-.1l-3.4 2.4a3.4 3.4 0 0 1-6.7.9l-3.8-1.6A10 10 0 1 0 12.2 2Zm4 8.5a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6ZM9.7 17.9a1.8 1.8 0 0 0 1.7-1.3 1.8 1.8 0 0 0-1.1-2.2 1.8 1.8 0 0 0-1.7.2l1.9.8a1.1 1.1 0 0 1-.8 2l-1.9-.8a1.8 1.8 0 0 0 1.9 1.3Z"/>
+          </svg>
+        </span>
+        <span class="link-info"><span class="link-title">Steam</span><span class="link-subtitle">Steam Profile</span></span>
+        <span class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+    </nav>
+
+    <section class="ping-card" aria-label="Ping Benchmark">
+      <div class="ping-header">
+        <div>
+          <div class="ping-label">// Network telemetry</div>
+          <h2 class="ping-title">Ping Benchmark</h2>
+        </div>
+        <button class="ping-button" id="ping-test-button" type="button">
+          <span aria-hidden="true">↻</span> Test latency
+        </button>
+      </div>
+      <div class="ping-value" aria-live="polite">
+        <span class="ping-number" id="ping-current">—</span>
+        <span class="ping-unit">ms</span>
+      </div>
+      <div class="ping-bars" id="ping-chart" aria-label="История измерений задержки"></div>
+      <div class="ping-footer">
+        <div><div class="ping-caption">AVG LATENCY</div><div class="ping-average" id="ping-average">— ms</div></div>
+        <div style="text-align:right"><div class="ping-caption">SAMPLES</div><div class="ping-average" id="ping-samples">0 / 14</div></div>
+      </div>
+      <div class="ping-status" id="ping-status" role="status">● READY — PRESS TEST</div>
+      <p class="ping-note">Measures real HTTP response time to this website. This is not an ICMP ping and does not measure the connection to a friend's device.</p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const chart = document.getElementById('ping-chart');
+      const current = document.getElementById('ping-current');
+      const average = document.getElementById('ping-average');
+      const samples = document.getElementById('ping-samples');
+      const status = document.getElementById('ping-status');
+      const button = document.getElementById('ping-test-button');
+
+      // Measure a real HTTP round trip to a small static asset on this same site.
+      // Cache-busting helps avoid measuring a cached response.
+      const history = [];
+      const sampleCount = 14;
+      let running = false;
+
+      function render() {
+        chart.replaceChildren();
+        const max = Math.max(...history, 1);
+
+        history.forEach((value, index) => {
+          const bar = document.createElement('div');
+          bar.className = 'ping-bar';
+          bar.style.height = Math.max(12, value / max * 100) + '%';
+          bar.style.background = index === history.length - 1 ? '#eeeeee' : '#686868';
+          bar.title = value + ' ms';
+          chart.appendChild(bar);
+        });
+
+        current.textContent = history.length ? history[history.length - 1] : '—';
+        average.textContent = history.length
+          ? (history.reduce((sum, value) => sum + value, 0) / history.length).toFixed(1) + ' ms'
+          : '— ms';
+        samples.textContent = history.length + ' / ' + sampleCount;
+      }
+
+      async function measureHttpLatency() {
+        const url = new URL('avatar.jpg', window.location.href);
+        url.searchParams.set('_latency_test', Date.now() + '-' + Math.random().toString(36).slice(2));
+        const started = performance.now();
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'same-origin'
+        });
+
+        // Read the body so the browser completes the request rather than only timing headers.
+        await response.blob();
+        const elapsed = Math.round(performance.now() - started);
+
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        return elapsed;
+      }
+
+      button.addEventListener('click', async () => {
+        if (running) return;
+        running = true;
+        button.disabled = true;
+        status.textContent = '● MEASURING HTTP LATENCY…';
+
+        try {
+          for (let i = 0; i < sampleCount; i++) {
+            const value = await measureHttpLatency();
+            history.push(value);
+            if (history.length > sampleCount) history.shift();
+            render();
+          }
+          status.textContent = '● REAL HTTP MEASUREMENTS COMPLETE';
+        } catch (error) {
+          status.textContent = '● TEST FAILED — ' + (error && error.message ? error.message : 'NETWORK ERROR');
+        } finally {
+          button.disabled = false;
+          running = false;
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
